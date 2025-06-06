@@ -7,3 +7,6 @@ This will give you a barebones REPL, where you can enter text and you will be ou
 
 To run use in command line use:
 `./run --gui [--port=<port>]`
+
+# Source:
+https://web.archive.org/web/20210413075902/http://cs.brown.edu/courses/cs0320/labs/databases.html
