@@ -43,6 +43,7 @@ public class Database {
     forName("org.sqlite.JDBC");
     String urlToDB = "jdbc:sqlite:" + filename;
     conn = DriverManager.getConnection(urlToDB);
+    //System.out.println("init database : " + conn);
     Statement stat = conn.createStatement();
     stat.executeUpdate("PRAGMA foreign_keys=ON;");
     stat.close();
@@ -56,7 +57,7 @@ public class Database {
    * @throws SQLException if something goes wrong with a SQL query.
    */
   void readCorpus(String filename) throws SQLException, ClassNotFoundException {
-
+    //System.out.println("Corpus database : " + conn);
     PreparedStatement prep =
         conn.prepareStatement("SELECT * from corpus WHERE filename=?");
     prep.setString(1, filename);
