@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.Class.forName;
 
 
 /**
@@ -36,6 +40,12 @@ public class Database {
      * TODO: Initialize the database connection, turn foreign keys on,
      *  and then create the word and corpus tables if they do not exist.
      */
+    forName("org.sqlite.JDBC");
+    String urlToDB = "jdbc:sqlite:" + filename;
+    conn = DriverManager.getConnection(urlToDB);
+    Statement stat = conn.createStatement();
+    stat.executeUpdate("PRAGMA foreign_keys=ON;");
+    stat.close();
   }
 
 
@@ -120,9 +130,10 @@ public class Database {
   Map<String, Integer> getFrequencyMap() throws SQLException {
     Map<String, Integer> freqMap = new HashMap<>();
     //TODO: select all filenames and how many words are associated with those filenames from the database
-    PreparedStatement prep = conn.prepareStatement(""); //Your SQL here!
+    PreparedStatement prep = conn.prepareStatement("SELECT filename,count(filename) from corpus join word on corpus.id = corpus_id group by filename ;"); //Your SQL here!
     ResultSet rs = prep.executeQuery();
     while (rs.next()) {
+      System.out.println("filename: " + rs.getString(1) + "count: " + rs.getInt(2)) ;
       freqMap.put(rs.getString(1), rs.getInt(2));
     }
 
@@ -142,7 +153,7 @@ public class Database {
   Map<String, Integer> getInstanceMap() throws SQLException {
     Map<String, Integer> instMap = new HashMap<>();
     //TODO: select the five most common words from the entire database, and how many times they appear
-    PreparedStatement prep = conn.prepareStatement(""); //Your SQL Here!
+    PreparedStatement prep = conn.prepareStatement("SELECT word,count(word) as cnt from word GROUP BY word order by cnt DESC LIMIT 5;"); //Your SQL Here!
     ResultSet rs = prep.executeQuery();
     while (rs.next()) {
       instMap.put(rs.getString(1), rs.getInt(2));
